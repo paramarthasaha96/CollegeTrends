@@ -1,0 +1,9 @@
+bin
+include
+lib
+Include
+Scripts
+tcl
+__pycache__
+db_config.py
+.idea
