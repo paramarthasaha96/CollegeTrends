@@ -68,7 +68,7 @@ def login_student():
 				try:
 					remember = request.form['remember']
 				except Exception as e:
-					remember = False\
+					remember = False
 				curUser.agent = request.headers.get('User-Agent')
 				if remember == True or remember == 'true':
 					expires_access = datetime.timedelta(days=365)

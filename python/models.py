@@ -105,3 +105,24 @@ class UserToken(db.Model):
 		self.agent = agent
 		self.expiry = expiry
 		
+class Communities(db.Model):
+	id = db.Column('community_id', db.Integer, primary_key = True)
+	name = db.Column('community_name', db.String(100))
+	parent = db.Column('community_parent', db.Integer)
+
+	def __init__(self, name, parent=None):
+		self.name = cgi.escape(name)
+		if parent is not None:
+			self.parent = int(parent)
+		else:
+			self.parent = None
+
+class UserCommunity(db.Model):
+	__tablename__ = 'user_community'
+	__table_args__ = ( PrimaryKeyConstraint('uc_user_id', 'uc_community_id'), )
+	uid = db.Column('uc_user_id', db.Integer)
+	cid = db.Column('uc_community_id', db.Integer)
+	
+	def __init__(self, uid, cid):
+		self.uid = int(uid)
+		self.cid = int(cid)
