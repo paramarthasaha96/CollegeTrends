@@ -78,7 +78,7 @@ class Admins(db.Model):
 	id = db.Column('admin_id', db.Integer, primary_key = True)
 	user = db.Column('admin_user_id', db.Integer, unique = True)
 
-	def __init__(self, curUser, stream):
+	def __init__(self, curUser):
 		self.user = curUser.id
 
 class Faculty(db.Model):

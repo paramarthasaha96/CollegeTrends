@@ -53,3 +53,42 @@ def root_community():
 	except Exception:
 		return jsonify([{ 'success':  0 }]), 201
 	return jsonify([{ 'success':  0 }])
+
+@communities.route('/api/communities/root', methods = ['POST'])
+@jwt_required
+def root_community():
+	user = get_jwt_identity()
+	try:
+		results = db.session.query(Communities, UserCommunity, Users).filter(Communities.id == UserCommunity.cid).filter(Communities.parent.is_(None)).\
+													filter(UserCommunity.uid == Users.id).all()
+		if results is None or len(results) == 0:
+			return jsonify([{'success':  0}]) #no results
+		resp = []
+		for result in results:
+			resp.append({'id': result[0].id, 'name': result[0].name})
+		return jsonify([{'success':  1}, resp]), 200
+	except Exception:
+		return jsonify([{ 'success':  -1 }]), 201 #DB error
+	return jsonify([{ 'success':  -2 }]) #fallback
+
+@communities.route('/api/communities/sub', methods = ['POST'])
+@jwt_required
+def sub_community():
+	user = get_jwt_identity()
+	cid = 0
+	try:
+		cid = int(request.form['cid'])
+	except Exception:
+		return jsonify([{'success':  0}]), 201 #no data sent / wrong data
+	try:
+		results = db.session.query(Communities, UserCommunity, Users).filter(Communities.id == UserCommunity.cid).filter(Communities.parent == cid).\
+													filter(UserCommunity.uid == Users.id).all()
+		if results is None or len(results) == 0:
+			return jsonify([{'success':  -1}])
+		resp = []
+		for result in results:
+			resp.append({'id': result[0].id, 'name': result[0].name})
+		return jsonify([{'success':  1}, resp]), 200
+	except Exception:
+		return jsonify([{ 'success':  -2 }]), 201
+	return jsonify([{ 'success':  -3 }])

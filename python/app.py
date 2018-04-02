@@ -25,8 +25,12 @@ from __init__ import app, jwt, Server
 from flask import Blueprint
 
 from login import loginp
+from community import communities
+from registration import register
 
 app.register_blueprint(loginp)
+app.register_blueprint(communities)
+app.register_blueprint(register)
 
 if __name__ == '__main__':
 	app.run(host=Server.SERVER_URL, port=Server.SERVER_PORT, threaded=True, debug = True)
