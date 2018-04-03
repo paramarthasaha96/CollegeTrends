@@ -26,7 +26,7 @@ from flask import Blueprint, request, flash, url_for, redirect, render_template,
 from sqlalchemy import exc, or_, and_, desc
 import json, random, jsonpickle
 import re, datetime
-from models import Users, Drivers, Bookings, Trip, DriverDetails
+from models import Users, Communities, UserCommunity
 from models import db
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -36,23 +36,6 @@ from flask_jwt_extended import (
 )
 
 communities = Blueprint('communities', __name__)
-
-@communities.route('/api/communities/root', methods = ['POST'])
-@jwt_required
-def root_community():
-	user = get_jwt_identity()
-	try:
-		results = db.session.query(Communities, UserCommunity, Users).filter(Communities.id == UserCommunity.cid).filter(Communities.parent.is_(None)).\
-													filter(UserCommunity.uid == Users.id).all()
-		if results is None or len(results) == 0:
-			return jsonify([{'success':  0}])
-		resp = []
-		for result in results:
-			resp.append({'id': result[0].id, 'name': result[0].name})
-		return jsonify([{'success':  1}, resp]), 200
-	except Exception:
-		return jsonify([{ 'success':  0 }]), 201
-	return jsonify([{ 'success':  0 }])
 
 @communities.route('/api/communities/root', methods = ['POST'])
 @jwt_required

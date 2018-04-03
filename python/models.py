@@ -126,3 +126,31 @@ class UserCommunity(db.Model):
 	def __init__(self, uid, cid):
 		self.uid = int(uid)
 		self.cid = int(cid)
+
+class Materials(db.Model):
+	id = db.Column('material_id', db.Integer, primary_key = True)
+	title = db.Column('material_title', db.String(400))
+	content = db.Column('material_content', db.Text)
+	link = db.Column('material_link', db.String(400))
+	faculty = db.Column('material_faculty', db.Integer)
+	community = db.Column('material_community', db.Integer)
+	thread = db.Column('material_thread', db.String(20))
+	timestamp = db.Column('material_timestamp', db.DateTime)
+
+	def __init__(self, title, content, link, faculty, community, thread):
+		self.title = cgi.escape(title)
+		self.content = cgi.escape(content)
+		self.link = cgi.escape(link)
+		self.faculty = int(faculty)
+		self.community = int(community)
+		self.thread = thread
+
+class DiscThreads(db.Model):
+	__tablename__ = 'disc_threads'
+	id = db.Column('disc_thread_id', db.String(20), primary_key = True)
+	community = db.Column('disc_thread_community', db.Integer)
+	timestamp = db.Column('disc_thread_timestamp', db.DateTime)
+
+	def __init__(self, id, community):
+		self.community = int(community)
+		self.id = id

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2018 at 08:31 PM
+-- Generation Time: Apr 03, 2018 at 05:03 PM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.9
 
@@ -52,7 +52,8 @@ CREATE TABLE `cn_notif_maps` (
 
 CREATE TABLE `communities` (
   `community_id` int(11) NOT NULL,
-  `community_name` varchar(40) NOT NULL
+  `community_name` varchar(100) NOT NULL,
+  `community_parent` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -62,7 +63,7 @@ CREATE TABLE `communities` (
 --
 
 CREATE TABLE `disc_threads` (
-  `disc_thread_id` int(11) NOT NULL,
+  `disc_thread_id` varchar(20) NOT NULL,
   `disc_thread_community` int(11) NOT NULL,
   `disc_thread_timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -92,7 +93,7 @@ CREATE TABLE `materials` (
   `material_link` varchar(400) NOT NULL,
   `material_faculty` int(11) NOT NULL,
   `material_community` int(11) NOT NULL,
-  `material_thread` int(11) NOT NULL,
+  `material_thread` varchar(20) NOT NULL,
   `material_timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -138,7 +139,7 @@ CREATE TABLE `schedules` (
   `schedule_content` text,
   `schedule_link` varchar(400) NOT NULL,
   `schedule_faculty` int(11) NOT NULL,
-  `schedule_thread` int(11) NOT NULL,
+  `schedule_thread` varchar(20) NOT NULL,
   `schedule_timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -235,7 +236,7 @@ CREATE TABLE `tags` (
 
 CREATE TABLE `thread_posts` (
   `post_id` int(11) NOT NULL,
-  `post_thread_id` int(11) NOT NULL,
+  `post_thread_id` varchar(20) NOT NULL,
   `post_parent_id` int(11) DEFAULT NULL,
   `post_user` int(11) NOT NULL,
   `post_user_level` int(11) NOT NULL,
@@ -259,6 +260,17 @@ CREATE TABLE `users` (
   `user_salt` text NOT NULL,
   `user_role` int(11) NOT NULL,
   `user_timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_community`
+--
+
+CREATE TABLE `user_community` (
+  `uc_user_id` int(11) NOT NULL,
+  `uc_community_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -297,7 +309,8 @@ ALTER TABLE `cn_notif_maps`
 -- Indexes for table `communities`
 --
 ALTER TABLE `communities`
-  ADD PRIMARY KEY (`community_id`);
+  ADD PRIMARY KEY (`community_id`),
+  ADD KEY `community_parent` (`community_parent`);
 
 --
 -- Indexes for table `disc_threads`
@@ -344,9 +357,9 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`schedule_id`),
-  ADD KEY `schedule_thread` (`schedule_thread`),
   ADD KEY `schedule_faculty` (`schedule_faculty`),
-  ADD KEY `schedule_community` (`schedule_community`);
+  ADD KEY `schedule_community` (`schedule_community`),
+  ADD KEY `schedule_thread` (`schedule_thread`);
 
 --
 -- Indexes for table `selected_subjects`
@@ -405,9 +418,9 @@ ALTER TABLE `tags`
 --
 ALTER TABLE `thread_posts`
   ADD PRIMARY KEY (`post_id`),
-  ADD KEY `thread_posts_ibfk_1` (`post_thread_id`),
   ADD KEY `post_user` (`post_user`),
-  ADD KEY `post_parent_id` (`post_parent_id`);
+  ADD KEY `post_parent_id` (`post_parent_id`),
+  ADD KEY `post_thread_id` (`post_thread_id`);
 
 --
 -- Indexes for table `users`
@@ -416,6 +429,13 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `user_email` (`user_email`),
   ADD UNIQUE KEY `user_mobile` (`user_mobile`);
+
+--
+-- Indexes for table `user_community`
+--
+ALTER TABLE `user_community`
+  ADD PRIMARY KEY (`uc_user_id`,`uc_community_id`) USING BTREE,
+  ADD KEY `uc_community_id` (`uc_community_id`);
 
 --
 -- Indexes for table `user_token`
@@ -438,12 +458,6 @@ ALTER TABLE `admins`
 --
 ALTER TABLE `communities`
   MODIFY `community_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `disc_threads`
---
-ALTER TABLE `disc_threads`
-  MODIFY `disc_thread_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `faculty`
@@ -529,6 +543,12 @@ ALTER TABLE `cn_notif_maps`
   ADD CONSTRAINT `cn_notif_maps_ibfk_2` FOREIGN KEY (`cn_notif_id`) REFERENCES `notifications` (`notif_id`);
 
 --
+-- Constraints for table `communities`
+--
+ALTER TABLE `communities`
+  ADD CONSTRAINT `communities_ibfk_1` FOREIGN KEY (`community_parent`) REFERENCES `communities` (`community_id`);
+
+--
 -- Constraints for table `disc_threads`
 --
 ALTER TABLE `disc_threads`
@@ -568,9 +588,9 @@ ALTER TABLE `notifications`
 -- Constraints for table `schedules`
 --
 ALTER TABLE `schedules`
-  ADD CONSTRAINT `schedules_ibfk_3` FOREIGN KEY (`schedule_thread`) REFERENCES `disc_threads` (`disc_thread_id`),
   ADD CONSTRAINT `schedules_ibfk_4` FOREIGN KEY (`schedule_faculty`) REFERENCES `faculty` (`faculty_id`),
-  ADD CONSTRAINT `schedules_ibfk_5` FOREIGN KEY (`schedule_community`) REFERENCES `communities` (`community_id`);
+  ADD CONSTRAINT `schedules_ibfk_5` FOREIGN KEY (`schedule_community`) REFERENCES `communities` (`community_id`),
+  ADD CONSTRAINT `schedules_ibfk_6` FOREIGN KEY (`schedule_thread`) REFERENCES `disc_threads` (`disc_thread_id`);
 
 --
 -- Constraints for table `selected_subjects`
@@ -617,9 +637,16 @@ ALTER TABLE `subjects`
 -- Constraints for table `thread_posts`
 --
 ALTER TABLE `thread_posts`
-  ADD CONSTRAINT `thread_posts_ibfk_1` FOREIGN KEY (`post_thread_id`) REFERENCES `disc_threads` (`disc_thread_id`),
   ADD CONSTRAINT `thread_posts_ibfk_3` FOREIGN KEY (`post_user`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `thread_posts_ibfk_4` FOREIGN KEY (`post_parent_id`) REFERENCES `thread_posts` (`post_id`);
+  ADD CONSTRAINT `thread_posts_ibfk_4` FOREIGN KEY (`post_parent_id`) REFERENCES `thread_posts` (`post_id`),
+  ADD CONSTRAINT `thread_posts_ibfk_5` FOREIGN KEY (`post_thread_id`) REFERENCES `disc_threads` (`disc_thread_id`);
+
+--
+-- Constraints for table `user_community`
+--
+ALTER TABLE `user_community`
+  ADD CONSTRAINT `user_community_ibfk_1` FOREIGN KEY (`uc_community_id`) REFERENCES `communities` (`community_id`),
+  ADD CONSTRAINT `user_community_ibfk_2` FOREIGN KEY (`uc_user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `user_token`

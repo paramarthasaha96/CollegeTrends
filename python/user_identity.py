@@ -24,7 +24,7 @@
 from __init__ import app
 import json, random, jsonpickle
 import re, datetime
-from models import Users, Drivers, Bookings, Trip, DriverDetails
+from models import Users, Faculty, Admins, Students
 from models import db
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
