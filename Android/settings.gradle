@@ -1,1 +1,0 @@
-include ':App', ':app', ':base', ':instantapp'
