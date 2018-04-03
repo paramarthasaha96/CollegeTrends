@@ -27,10 +27,12 @@ from flask import Blueprint
 from login import loginp
 from community import communities
 from registration import register
+from material import materials
 
 app.register_blueprint(loginp)
 app.register_blueprint(communities)
 app.register_blueprint(register)
+app.register_blueprint(materials)
 
 if __name__ == '__main__':
 	app.run(host=Server.SERVER_URL, port=Server.SERVER_PORT, threaded=True, debug = True)
