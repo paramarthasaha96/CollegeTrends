@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +68,13 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        View v=inflater.inflate(R.layout.fragment_list, container, false);
+        SearchView searchView = (SearchView)v.findViewById(R.id.search_view);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar2);
+        //toolbar.setNavigationIcon(R.drawable.ic_back);//if not parent community show this else ignore
+        toolbar.setElevation(0);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

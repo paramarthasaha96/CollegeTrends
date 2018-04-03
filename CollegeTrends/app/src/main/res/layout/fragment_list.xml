@@ -3,13 +3,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.trends.college.ListFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/primary_dark">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="0dp"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="IEM Department"
+            android:gravity="center"
+            android:textSize="18sp"/>
+    </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="0dp"
+        android:layout_marginBottom="4dp"
+        >
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:theme="@style/SearchViewTheme"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
+            android:gravity="center"
+            app:queryHint="Search here"/>
+    </android.support.v7.widget.Toolbar>
+<ScrollView
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
 
-    <include layout="@layout/layout_notes" />
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.trends.college.ListFragment"
+        android:orientation="vertical"
+        >
+        <include layout="@layout/layout_community" />
 
-    <include layout="@layout/layout_schedule" />
+        <include layout="@layout/layout_notes" />
 
-    <include layout="@layout/layout_announcement" />
+        <include layout="@layout/layout_schedule" />
 
+
+
+    </LinearLayout>
+</ScrollView>
 </LinearLayout>

@@ -3,7 +3,7 @@
     android:id="@+id/announcementLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="50dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:layout_marginBottom="4dp">
@@ -13,21 +13,15 @@
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="2">
+        android:weightSum="1">
 
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00000000"
-            android:src="@drawable/user" />
+            android:src="@drawable/group" />
 
-        <android.support.v7.widget.AppCompatImageButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:src="@drawable/announcement" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,21 +37,9 @@
             android:paddingStart="10dp"
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
-            android:text="Principal"
+            android:text="CSE"
             android:textColor="@color/black"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:text="Announcement 1"
-            android:textColor="@color/black"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:text="April 20,2015"
-            android:textColor="@color/grey"/>
+
 
     </LinearLayout>
 
