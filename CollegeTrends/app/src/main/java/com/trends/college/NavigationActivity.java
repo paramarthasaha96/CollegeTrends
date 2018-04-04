@@ -30,6 +30,11 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		if (!SharedPrefManager.getInstance(this).isLoggedIn()) {
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         setContentView(R.layout.activity_navigation);
         AppBarLayout appBar=findViewById(R.id.appBarLayout);
         appBar.setTargetElevation(0);
